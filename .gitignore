@@ -1,16 +1,61 @@
-﻿node_modules/
-dashboard/node_modules/
-dashboard/build/
+# ==========================================
+# Python / FastAPI Backend
+# ==========================================
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 backend/**/__pycache__/
-*.pyc
-.env
+backend/.pytest_cache/
+
+# Virtual Environments
 venv/
 .venv/
+ENV/
+env/
+backend/venv/
+backend/.venv/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+backend/.env
+
+# ==========================================
+# React Frontend (Dashboard)
+# ==========================================
+node_modules/
+dashboard/node_modules/
+dashboard/build/
+dashboard/.pnp
+dashboard/.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+# Flutter Mobile App
+# ==========================================
 mobile/.dart_tool/
+mobile/.packages
+mobile/.pub/
+mobile/.pub-cache/
 mobile/build/
 mobile/.flutter-plugins
 mobile/.flutter-plugins-dependencies
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Flutter/flutter_export_environment.sh
+
+# ==========================================
+# IDEs & System Files
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
 .DS_Store
 Thumbs.db
-.vscode/
