@@ -41,6 +41,7 @@
     *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
   }
 
+  /* background texture */
   .grid-veil{
     position:fixed; inset:0; z-index:0; pointer-events:none;
     background-image:
@@ -1325,7 +1326,7 @@ function connectBackendEngine() {
   ws.onopen = () => {
     console.log("Connected to Live CrowdShield YOLOv8 Engine!");
     const badge = document.getElementById('radarLiveBadge');
-    if (badge) badge.innerHTML = '<span class="r" style="background:var(--risk-safe)"></span> BACKEND ENGINE LIVE';
+    if (badge) badge.innerHTML = '<span class="r" style="background:var(--risk-safe); box-shadow:0 0 8px var(--risk-safe);"></span> BACKEND ENGINE LIVE';
   };
 
   ws.onmessage = (event) => {
