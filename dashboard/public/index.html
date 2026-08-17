@@ -41,7 +41,6 @@
     *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
   }
 
-  /* background texture */
   .grid-veil{
     position:fixed; inset:0; z-index:0; pointer-events:none;
     background-image:
@@ -153,7 +152,7 @@
   .p-card span.label{font-size:0.88rem; color:var(--text); display:block; margin-bottom:6px; font-weight:600;}
   .p-card p{color:var(--muted); font-size:0.86rem;}
 
-  /* ---------- LIVE MONITOR (camera) ---------- */
+  /* ---------- LIVE MONITOR ---------- */
   .monitor-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:26px;}
   @media(max-width:980px){ .monitor-grid{grid-template-columns:1fr;} }
 
@@ -219,7 +218,7 @@
 
   .chart-wrap{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px; margin-top:22px;}
 
-  /* ---------- FEATURE GRID (functional reqs) ---------- */
+  /* ---------- FEATURE GRID ---------- */
   .feat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
   @media(max-width:980px){ .feat-grid{grid-template-columns:repeat(2,1fr);} }
   @media(max-width:640px){ .feat-grid{grid-template-columns:1fr;} }
@@ -294,11 +293,6 @@
   .leaflet-popup-content b{font-family:var(--display);}
   .leaflet-control-attribution{background:rgba(5,7,12,0.7) !important; color:var(--muted) !important;}
   .leaflet-control-attribution a{color:var(--electric) !important;}
-  .pulse-marker{border-radius:50%; position:relative;}
-  .pulse-marker::after{
-    content:''; position:absolute; inset:-6px; border-radius:50%; border:2px solid currentColor;
-    animation:pulseRing 1.8s ease-out infinite;
-  }
 
   .loc-panel{background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:22px; display:flex; flex-direction:column; gap:18px; height:560px; overflow-y:auto;}
   .loc-panel .loc-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
@@ -340,7 +334,6 @@
   .lang-toggle{display:flex; gap:8px; margin-bottom:16px;}
   .lang-btn{font-family:var(--mono); font-size:0.75rem; padding:8px 16px; border-radius:8px; border:1px solid var(--line); background:transparent; color:var(--muted); cursor:pointer;}
   .lang-btn.active{border-color:var(--electric); color:var(--electric); background:rgba(62,230,224,0.08);}
-  [data-i18n]{transition:opacity 0.15s;}
 
   ::-webkit-scrollbar{width:8px; height:8px;}
   ::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.35); border-radius:8px;}
@@ -359,6 +352,7 @@
       <a href="#monitor">Live Monitor</a>
       <a href="#dashboard">Command Center</a>
       <a href="#twin">Digital Twin</a>
+      <a href="#assistant">Voice &amp; AI</a>
       <a href="#capabilities">Capabilities</a>
       <a href="#mobile">Mobile App</a>
       <a href="#architecture">Architecture</a>
@@ -388,7 +382,7 @@
     <div class="radar-panel">
       <div class="radar-head">
         <span class="title">Venue Risk Radar · Sector 4</span>
-        <div class="live-badge"><span class="r"></span> LIVE</div>
+        <div class="live-badge" id="radarLiveBadge"><span class="r"></span> LIVE ENGINE SYNC</div>
       </div>
       <div class="radar-map" id="heroRadar">
         <div class="radar-sweep"></div>
@@ -397,7 +391,6 @@
           <span style="width:60%; height:60%;"></span>
           <span style="width:90%; height:90%;"></span>
         </div>
-        <!-- zone dots injected by JS -->
       </div>
       <div class="radar-foot">
         <span id="radarTimestamp">SYNCING…</span>
@@ -465,7 +458,7 @@
 
         <div class="loc-select" id="locChips"></div>
 
-        <div class="feed-tie-note" id="camTieNote">Start the live camera below and its motion reading will blend directly into this site's risk score — this is how a real on-ground camera feed would drive the network.</div>
+        <div class="feed-tie-note" id="camTieNote">Start the live camera below or connect the live YOLO backend and its reading will blend directly into this site's risk score in real time.</div>
 
         <div style="display:flex; flex-direction:column; gap:10px;">
           <div class="mh"><span style="font-family:var(--mono); font-size:0.7rem; color:var(--muted); text-transform:uppercase;">Generative Incident Summary</span></div>
@@ -483,7 +476,7 @@
     <div class="sec-head">
       <div class="eyebrow">Live Monitor</div>
       <h2>Point a camera at a crowd. CrowdShield reads it in real time.</h2>
-      <p>This runs a live motion-density analysis directly in your browser — the same principle CrowdShield uses on venue CCTV, just running on your webcam. Nothing is recorded or uploaded. Its output feeds live into <b id="monitorLocRef">the site you select above</b>.</p>
+      <p>This runs a live motion-density analysis directly in your browser or links to the YOLOv8 WebSocket stream. Its output feeds live into <b id="monitorLocRef">the site you select above</b>.</p>
     </div>
 
     <div class="monitor-grid">
@@ -503,7 +496,7 @@
           <button class="cam-btn" id="startCamBtn">▸ Start camera analysis</button>
           <button class="cam-btn" id="stopCamBtn" style="display:none;">■ Stop</button>
         </div>
-        <p class="cam-note">Uses your device camera locally via frame-differencing to estimate motion energy and crowd movement — a lightweight proxy for the CNN-based density models CrowdShield runs on real CCTV streams.</p>
+        <p class="cam-note">Uses your device camera locally via frame-differencing to estimate motion energy and crowd movement, and seamlessly synchronizes with YOLOv8 inference telemetry.</p>
       </div>
 
       <div class="metric-stack">
@@ -531,7 +524,7 @@
     <div class="sec-head">
       <div class="eyebrow">Command Dashboard</div>
       <h2>One shared, live picture of the whole venue.</h2>
-      <p>A control-room view built for the people who have seconds, not minutes, to decide — heat map, risk zones, alert feed and next-best-action, together.</p>
+      <p>A control-room view built for authorities and event commanders — heat map, risk zones, alert feed and next-best-action, together.</p>
     </div>
 
     <div class="dash-shell">
@@ -548,7 +541,6 @@
       <div class="dash-body">
         <div class="venue-map">
           <svg viewBox="0 0 400 300" id="venueSvg">
-            <!-- zones -->
             <polygon class="zone-poly" data-zone="Main Entrance" points="10,10 130,10 130,90 10,90" fill="var(--risk-safe)" opacity="0.75"/>
             <polygon class="zone-poly" data-zone="Gate 2 Concourse" points="140,10 260,10 260,90 140,90" fill="var(--risk-safe)" opacity="0.75"/>
             <polygon class="zone-poly" data-zone="VIP Enclosure" points="270,10 390,10 390,90 270,90" fill="var(--risk-safe)" opacity="0.75"/>
@@ -592,7 +584,7 @@
     <div class="sec-head">
       <div class="eyebrow">Digital Twin · Bonus Feature</div>
       <h2>A running simulation of the crowd itself.</h2>
-      <p>Each dot is a simulated attendee at the selected site. Density, speed and jitter respond live to that site's real risk score — this is the same twin CrowdShield would use to rehearse gate closures before an event.</p>
+      <p>Each agent represents an attendee at the selected site. Density, velocity and jitter respond dynamically to that site's real-time risk index.</p>
     </div>
     <div class="twin-shell">
       <div class="twin-canvas-wrap"><canvas id="twinCanvas"></canvas></div>
@@ -641,10 +633,10 @@
     </div>
     <div class="feat-grid">
       <div class="feat-card"><div class="fi">◐</div><h4>Density Estimation</h4><p>Per-zone people-per-square-metre estimates from camera feeds, refreshed continuously.</p></div>
-      <div class="feat-card"><div class="fi">↝</div><h4>Movement & Flow Tracking</h4><p>Direction and speed of crowd flow, including detection of dangerous reverse flow.</p></div>
-      <div class="feat-card"><div class="fi">▦</div><h4>Bottleneck & Hotspot ID</h4><p>Automatically flags choke points before density crosses a safe threshold.</p></div>
-      <div class="feat-card"><div class="fi">⚠</div><h4>Stampede & Crush Prediction</h4><p>Forecasts crush and panic-propagation risk minutes ahead using trend + anomaly models.</p></div>
-      <div class="feat-card"><div class="fi">➜</div><h4>Route & Evacuation Guidance</h4><p>Recommends the safest live evacuation route as conditions change in real time.</p></div>
+      <div class="feat-card"><div class="fi">↝</div><h4>Movement &amp; Flow Tracking</h4><p>Direction and speed of crowd flow, including detection of dangerous reverse flow.</p></div>
+      <div class="feat-card"><div class="fi">▦</div><h4>Bottleneck &amp; Hotspot ID</h4><p>Automatically flags choke points before density crosses a safe threshold.</p></div>
+      <div class="feat-card"><div class="fi">⚠</div><h4>Stampede &amp; Crush Prediction</h4><p>Forecasts crush and panic-propagation risk minutes ahead using trend + anomaly models.</p></div>
+      <div class="feat-card"><div class="fi">➜</div><h4>Route &amp; Evacuation Guidance</h4><p>Recommends the safest live evacuation route as conditions change in real time.</p></div>
       <div class="feat-card"><div class="fi">☰</div><h4>Personnel Redistribution</h4><p>Suggests where to move security staff based on live, venue-wide risk distribution.</p></div>
       <div class="feat-card"><div class="fi">⛨</div><h4>Gate Control Suggestions</h4><p>Recommends which gates to open, close, or throttle to relieve pressure.</p></div>
       <div class="feat-card"><div class="fi">🔊</div><h4>Multilingual Announcements</h4><p>Auto-drafts calm, multilingual PA scripts to reduce panic during an incident.</p></div>
@@ -686,12 +678,12 @@
     <div class="sec-head">
       <div class="eyebrow">How It Works</div>
       <h2>Low-cost hardware. High-signal pipeline.</h2>
-      <p>Designed to run on existing CCTV and a handful of low-cost cameras — no proprietary sensor grid required.</p>
+      <p>Designed to run on existing CCTV and low-cost cameras — no proprietary sensor grid required.</p>
     </div>
     <div class="arch-flow">
-      <div class="arch-step"><span class="tag">01 · INGEST</span><h4>Existing CCTV / low-cost IP cams</h4><p>Streams pulled at low frame rate to minimize bandwidth and hardware cost.</p></div>
+      <div class="arch-step"><span class="tag">01 · INGEST</span><h4>Existing CCTV / IP cams</h4><p>Streams pulled at low frame rate to minimize bandwidth and hardware cost.</p></div>
       <div class="arch-arrow">→</div>
-      <div class="arch-step"><span class="tag">02 · EDGE / CLOUD CV</span><h4>Density & flow models</h4><p>Lightweight vision models estimate density, speed and direction per zone.</p></div>
+      <div class="arch-step"><span class="tag">02 · EDGE / CLOUD CV</span><h4>Density &amp; flow models</h4><p>Lightweight YOLOv8 + Optical Flow estimate density, speed and direction per zone.</p></div>
       <div class="arch-arrow">→</div>
       <div class="arch-step"><span class="tag">03 · PREDICTION ENGINE</span><h4>Risk forecasting</h4><p>Time-series + anomaly detection projects risk 5–10 minutes ahead.</p></div>
       <div class="arch-arrow">→</div>
@@ -709,7 +701,7 @@
       <div class="eyebrow">Bonus Features</div>
       <h2 style="font-family:var(--display); font-size:1.5rem; margin-bottom:20px;">Beyond the baseline</h2>
       <div class="chip-list">
-        <div class="chip-row"><span class="ic bonus">◈</span>Digital twin of the venue for simulation & rehearsal</div>
+        <div class="chip-row"><span class="ic bonus">◈</span>Digital twin of the venue for simulation &amp; rehearsal</div>
         <div class="chip-row"><span class="ic bonus">◈</span>AI-powered crowd movement simulation for pre-event planning</div>
         <div class="chip-row"><span class="ic bonus">◈</span>Voice-enabled command center for hands-free operator control</div>
         <div class="chip-row"><span class="ic bonus">◈</span>Multilingual AI assistant for on-ground staff</div>
@@ -720,7 +712,7 @@
       <div class="eyebrow">Designed Around Real Constraints</div>
       <h2 style="font-family:var(--display); font-size:1.5rem; margin-bottom:20px;">Built for the field, not the lab</h2>
       <div class="chip-list">
-        <div class="chip-row"><span class="ic constraint">▲</span>Works on limited infrastructure & low-cost hardware</div>
+        <div class="chip-row"><span class="ic constraint">▲</span>Works on limited infrastructure &amp; low-cost hardware</div>
         <div class="chip-row"><span class="ic constraint">▲</span>Degrades gracefully through network outages</div>
         <div class="chip-row"><span class="ic constraint">▲</span>Privacy-first: on-device processing, no facial recognition</div>
         <div class="chip-row"><span class="ic constraint">▲</span>Tuned for false-alarm reduction, not alert fatigue</div>
@@ -748,7 +740,7 @@
 </footer>
 
 <script>
-/* ============ shared risk vocabulary ============ */
+/* ============ SHARED RISK VOCABULARY ============ */
 const RISK_COLORS = {
   safe: 'var(--risk-safe)',
   mid: 'var(--risk-mid)',
@@ -912,7 +904,7 @@ renderLocChips();
 updateLocPanel();
 setInterval(tickSites, 2400);
 
-/* generative incident summary */
+/* Generative incident summary */
 function buildSummary(){
   const site = SITES.find(s=>s.id===selectedSiteId);
   const lvl = siteLevel(site);
@@ -1059,7 +1051,7 @@ function twinLoop(){
 }
 requestAnimationFrame(twinLoop);
 
-/* ============ CAMERA-BASED CROWD DENSITY (real frame-differencing) ============ */
+/* ============ CAMERA-BASED CROWD DENSITY ============ */
 const video = document.getElementById('camVideo');
 const canvas = document.getElementById('camCanvas');
 const ctx = canvas.getContext('2d', {willReadFrequently:true});
@@ -1102,7 +1094,7 @@ function stopCamera(){
   if(rafId) cancelAnimationFrame(rafId);
   if(stream){ stream.getTracks().forEach(t=>t.stop()); }
   cameraBlendActive = false;
-  document.getElementById('camTieNote').textContent = 'Start the live camera below and its motion reading will blend directly into this site\'s risk score — this is how a real on-ground camera feed would drive the network.';
+  document.getElementById('camTieNote').textContent = 'Start the live camera below or connect the live YOLO backend and its reading will blend directly into this site\'s risk score.';
   camStatus.textContent = 'OFFLINE';
   camStatus.style.color = 'var(--muted)';
   startBtn.style.display='block';
@@ -1147,11 +1139,10 @@ function analyzeLoop(){
         }
       }
     }
-    const motionRatio = diffSum / (SAMPLE_W*SAMPLE_H); // 0..1
+    const motionRatio = diffSum / (SAMPLE_W*SAMPLE_H);
     smoothedMotion = smoothedMotion*0.8 + motionRatio*0.2;
     const motionPercent = Math.min(100, Math.round(smoothedMotion*260));
 
-    // flow direction via centroid drift
     let flowLabel = 'Stationary';
     if(weightCount>15){
       const centroidX = weightedX/weightCount;
@@ -1164,7 +1155,6 @@ function analyzeLoop(){
       lastCentroidX = centroidX;
     }
 
-    // density label from motion percent + activated cell coverage
     const activeCells = cellEnergy.filter(v=>v>3).length;
     const coverage = activeCells/(cellCols*cellRows);
     let densityText, densityColor;
@@ -1176,7 +1166,6 @@ function analyzeLoop(){
     const riskScore = Math.min(100, Math.round(coverage*70 + motionPercent*0.3));
     smoothedRisk = smoothedRisk*0.75 + riskScore*0.25;
 
-    // draw overlay grid on visible canvas (scaled to full size)
     ctx.clearRect(0,0,canvas.width,canvas.height);
     const gw = canvas.width/cellCols, gh = canvas.height/cellRows;
     for(let cy=0;cy<cellRows;cy++){
@@ -1192,7 +1181,6 @@ function analyzeLoop(){
       }
     }
 
-    // update UI
     densityLabel.textContent = densityText;
     densityLabel.style.color = densityColor;
     motionPct.textContent = motionPercent+'%';
@@ -1209,7 +1197,7 @@ function analyzeLoop(){
   rafId = requestAnimationFrame(analyzeLoop);
 }
 
-/* ============ COMMAND DASHBOARD: venue zones, alerts, recs, chart ============ */
+/* ============ COMMAND DASHBOARD: VENUE ZONES, ALERTS, RECS, CHART ============ */
 const zoneState = {
   'Main Entrance': 18, 'Gate 2 Concourse': 22, 'VIP Enclosure': 12,
   'Main Stage Pit': 46, 'Ghat Steps': 38, 'Food Court': 24, 'Exit Corridor B': 15
@@ -1279,7 +1267,7 @@ renderRecs();
 addAlert('Main Stage Pit','mid','Monitoring initialized — baseline density captured');
 setInterval(tickZones, 2600);
 
-/* trend chart */
+/* Trend Chart */
 const trendCtx = document.getElementById('trendChart').getContext('2d');
 const trendData = { labels: [], datasets:[{
   label:'Main Stage Pit density (%)',
@@ -1310,7 +1298,7 @@ setInterval(()=>{
   trendChart.update();
 }, 3000);
 
-/* phone mini map ambient dots */
+/* Phone mini map ambient dots */
 const phoneMap = document.getElementById('phoneMap');
 for(let i=0;i<5;i++){
   const d = document.createElement('div');
@@ -1324,6 +1312,41 @@ for(let i=0;i<5;i++){
   d.style.animationDelay = (Math.random()*2)+'s';
   phoneMap.appendChild(d);
 }
+
+/* ============ LIVE BACKEND WEBSOCKET INTEGRATION ============ */
+const BACKEND_WS_URL = (location.protocol === 'https:' ? 'wss://' : 'ws://') + 
+  (location.hostname === 'localhost' || location.hostname === '127.0.0.1' 
+    ? '127.0.0.1:8000/ws/stream?stream_url=0' 
+    : 'crowdshield-backend.onrender.com/ws/stream?stream_url=0');
+
+function connectBackendEngine() {
+  const ws = new WebSocket(BACKEND_WS_URL);
+
+  ws.onopen = () => {
+    console.log("Connected to Live CrowdShield YOLOv8 Engine!");
+    const badge = document.getElementById('radarLiveBadge');
+    if (badge) badge.innerHTML = '<span class="r" style="background:var(--risk-safe)"></span> BACKEND ENGINE LIVE';
+  };
+
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.density_per_m2 !== undefined) {
+        zoneState['Main Stage Pit'] = Math.min(100, Math.round(data.density_per_m2 * 25));
+        updateVenueMap();
+        renderRecs();
+      }
+    } catch (err) {
+      console.error("WS Parse error:", err);
+    }
+  };
+
+  ws.onclose = () => {
+    setTimeout(connectBackendEngine, 3000);
+  };
+}
+
+connectBackendEngine();
 </script>
 </body>
 </html>
