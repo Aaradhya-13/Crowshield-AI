@@ -1,0 +1,16 @@
+﻿node_modules/
+dashboard/node_modules/
+dashboard/build/
+__pycache__/
+backend/**/__pycache__/
+*.pyc
+.env
+venv/
+.venv/
+mobile/.dart_tool/
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+.DS_Store
+Thumbs.db
+.vscode/
