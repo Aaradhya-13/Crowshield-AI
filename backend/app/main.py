@@ -4,7 +4,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from app.vision import process_frame
 
-app = FastAPI()
+app = FastAPI(title="CrowdShield Engine API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,14 +14,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Root health check route for browser visits
+@app.get("/")
+def root():
+    return {
+        "status": "online",
+        "service": "CrowdShield AI Engine",
+        "websocket_endpoint": "/ws/stream"
+    }
+
 @app.websocket("/ws/stream")
 async def websocket_endpoint(websocket: WebSocket, stream_url: str = "0"):
     await websocket.accept()
-    print("Dashboard client connected successfully!")
-
     source = int(stream_url) if stream_url.isdigit() else stream_url
     
-    # Use cv2.CAP_DSHOW for webcam indices to bypass MSMF driver warnings on Windows
     if isinstance(source, int):
         cap = cv2.VideoCapture(source, cv2.CAP_DSHOW)
     else:
@@ -44,7 +50,7 @@ async def websocket_endpoint(websocket: WebSocket, stream_url: str = "0"):
             await asyncio.sleep(0.05)
 
     except WebSocketDisconnect:
-        print("Dashboard client disconnected.")
+        pass
     except Exception as e:
         print(f"WS Error: {e}")
     finally:
