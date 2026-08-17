@@ -17,9 +17,14 @@ function App() {
     let ws;
     let timer;
 
+    // Dynamically choose between local IPv4 and live Render secure WebSocket (wss://)
+    const BACKEND_WS_URL =
+      window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'ws://127.0.0.1:8000/ws/stream?stream_url=0'
+        : 'wss://crowdshield-backend.onrender.com/ws/stream?stream_url=0';
+
     const connect = () => {
-      // Connect specifically to 127.0.0.1 IPv4 to prevent Windows localhost resolution bugs
-      ws = new WebSocket('ws://127.0.0.1:8000/ws/stream?stream_url=0');
+      ws = new WebSocket(BACKEND_WS_URL);
 
       ws.onopen = () => {
         setIsConnected(true);
