@@ -1,8 +1,6 @@
-@"
 fastapi
 uvicorn[standard]
 ultralytics
 opencv-python-headless
 numpy
 websockets
-"@ | Out-File -FilePath C:\Users\KIIT\OneDrive\Desktop\CrowdShield\backend\requirements.txt -Encoding utf8
